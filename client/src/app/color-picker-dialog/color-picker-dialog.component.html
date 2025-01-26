@@ -1,0 +1,66 @@
+<div class="color-picker-overlay">
+  <div class="card-container">
+    <img
+      src="/assets/wild_card/wild_back.webp"
+      alt="background"
+      class="background"
+    />
+    <div class="clickable-areas">
+      <div
+        class="corner top-left"
+        (click)="selectColor('green')"
+        (mouseenter)="highlightColor('green')"
+        (mouseleave)="resetHighlight()"
+      >
+        <img
+          src="/assets/wild_card/green.webp"
+          [class.highlight]="highlightedColor === 'green'"
+          class="color-overlay"
+          alt="green"
+        />
+      </div>
+
+      <div
+        class="corner top-right"
+        (click)="selectColor('yellow')"
+        (mouseenter)="highlightColor('yellow')"
+        (mouseleave)="resetHighlight()"
+      >
+        <img
+          src="/assets/wild_card/yellow.webp"
+          [class.highlight]="highlightedColor === 'yellow'"
+          class="color-overlay"
+          alt="yellow"
+        />
+      </div>
+
+      <div
+        class="corner bottom-right"
+        (click)="selectColor('red')"
+        (mouseenter)="highlightColor('red')"
+        (mouseleave)="resetHighlight()"
+      >
+        <img
+          src="/assets/wild_card/red.webp"
+          [class.highlight]="highlightedColor === 'red'"
+          class="color-overlay"
+          alt="red"
+        />
+      </div>
+
+      <div
+        class="corner bottom-left"
+        (click)="selectColor('blue')"
+        (mouseenter)="highlightColor('blue')"
+        (mouseleave)="resetHighlight()"
+      >
+        <img
+          src="/assets/wild_card/blue.webp"
+          [class.highlight]="highlightedColor === 'blue'"
+          class="color-overlay"
+          alt="blue"
+        />
+      </div>
+    </div>
+  </div>
+</div>

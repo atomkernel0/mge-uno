@@ -1,0 +1,120 @@
+<img src="/assets/shader.webp" class="overlay-image" alt="overlay" />
+<div class="game-container">
+  <div class="direction-indicator">
+    <img
+      *ngIf="gameState.gameDirection === 1"
+      class="arrow clockwise"
+      src="/assets/rotate_arrows/arrow-rotate-clockwise.svg"
+      width="24"
+      height="24"
+    />
+
+    <img
+      *ngIf="gameState.gameDirection === -1"
+      class="arrow counter-clockwise"
+      src="/assets/rotate_arrows/arrow-rotate-counterclockwise.svg"
+      width="24"
+      height="24"
+    />
+  </div>
+
+  <div class="opponents-area">
+    <ng-container *ngFor="let playerId of getOtherPlayers()">
+      <div
+        class="opponent-hand"
+        [ngClass]="getPlayerPositionClass(playerId)"
+        [class.current-turn]="playerId === gameState.currentPlayer"
+      >
+        <div class="opponent-avatar">
+          <img
+            [src]="getPlayerAvatar(playerId)"
+            alt="Avatar"
+            class="player-avatar"
+          />
+        </div>
+
+        <div class="opponent-info">
+          {{ getPlayerName(playerId) }}
+        </div>
+
+        <div class="opponent-cards">
+          <div
+            class="card-back"
+            *ngFor="let i of getCardBacksArray(playerId)"
+            [style.transform]="getCardTransform(i, playerId)"
+          ></div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="deck-area">
+    <div
+      class="deck"
+      [class.can-draw]="canDrawCard()"
+      [class.disabled]="!canDrawCard() || isSpectator"
+      [class.highlight]="shouldHighlightDrawCard"
+      [class.spectator-mode]="isSpectator"
+      (click)="onDeckClick()"
+    >
+      <div class="card-back"></div>
+    </div>
+    <div class="current-card">
+      <app-card
+        *ngIf="gameState.currentCard"
+        [card]="gameState.currentCard"
+        [class.drawn-animation]="drawnCardAnimation"
+        [selected]="false"
+        [style.box-shadow]="getCardGlow()"
+        [ngClass]="{ 'shuffle-animation': isShuffleAnimation }"
+      >
+      </app-card>
+    </div>
+  </div>
+
+  <div class="player-hand" [class.spectator-mode]="isSpectator">
+    <app-card
+      *ngFor="let card of gameState.playerHand"
+      [card]="card"
+      (cardClick)="handleCardClick($event)"
+      [class.selected]="selectedCard === card"
+      [ngClass]="{
+        selected: selectedCard === card
+      }"
+    >
+    </app-card>
+  </div>
+
+  <div class="game-actions">
+    <button
+      *ngIf="canSkipTurn() && !isSpectator"
+      (click)="passTurn()"
+      [disabled]="!canSkipTurn()"
+    >
+      Skip Turn
+    </button>
+  </div>
+</div>
+
+<app-color-picker-dialog
+  *ngIf="showColorPicker"
+  (colorSelected)="onColorSelected($event)"
+>
+</app-color-picker-dialog>
+
+<app-victory-dialog
+  *ngIf="showVictoryDialog"
+  [winnerMessage]="winnerMessage"
+  [winnerAvatar]="getWinnerAvatar()"
+>
+</app-victory-dialog>
+
+<div class="drawn-card-container" *ngIf="drawnCardAnimation && deckPosition">
+  <div
+    class="drawn-card"
+    [style.left.px]="deckPosition.x"
+    [style.top.px]="deckPosition.y"
+  ></div>
+</div>
+
+<div class="spectator-banner" *ngIf="isSpectator">Mode Spectateur</div>

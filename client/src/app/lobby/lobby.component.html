@@ -1,0 +1,112 @@
+<div class="lobby-container">
+  <h1>Lobby</h1>
+
+  <div class="players-list">
+    <h3>Joueurs connectés : {{ playerCount }}</h3>
+    <ul>
+      <li *ngFor="let player of players" class="player-item">
+        <img
+          [src]="player.avatar || 'assets/back.webp'"
+          alt="Avatar"
+          class="player-avatar"
+        />
+        <div class="player-status-align">
+          <span class="player-name">
+            {{ player.nickname }}
+            <span *ngIf="player.id === getPlayerId()">(Vous)</span>
+          </span>
+          <span class="player-status" [class.ready]="player.isReady">
+            {{ player.isReady ? "✓" : "×" }}
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <h3>Nom d'utilisateur</h3>
+
+  <div class="player-profile-section">
+    <form
+      (submit)="onNicknameSubmit($event, nicknameInput.value)"
+      class="nickname-form"
+    >
+      <input
+        #nicknameInput
+        type="text"
+        [value]="nickname"
+        placeholder="Entrez votre pseudo"
+        required
+        maxlength="20"
+      />
+      <button type="submit">Changer de nom</button>
+    </form>
+
+    <div class="avatar-selection">
+      <h3>Photo de profil</h3>
+      <div class="avatar-grid">
+        <div
+          *ngFor="let avatar of profilePictures"
+          class="avatar-option"
+          [class.selected]="isAvatarSelected(avatar.path)"
+          (click)="chooseAvatar(avatar.id)"
+        >
+          <img [src]="avatar.path" [alt]="avatar.name" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-buttons">
+    <div class="button-container">
+      <button
+        (click)="startGame()"
+        [disabled]="!checkAllPlayersReady().ready || playerCount < 2"
+        class="start-button"
+      >
+        {{
+          playerCount < 2 ? "En attente d'autres joueurs" : "Démarrer la partie"
+        }}
+      </button>
+    </div>
+
+    <button (click)="leaveLobby()" class="leave-btn">Quitter le lobby</button>
+  </div>
+  <div
+    *ngIf="notReadyPlayers.length > 0 && playerCount >= 2"
+    class="error-message"
+  >
+    <span class="error-icon">⚠️</span>
+    <span>
+      {{
+        notReadyPlayers.length === 1
+          ? notReadyPlayers[0] + " n'a pas complété son profil"
+          : "Les joueurs suivants n'ont pas complété leur profil : " +
+            notReadyPlayers.join(", ")
+      }}
+    </span>
+  </div>
+
+  <div class="ipod-container">
+    <div class="music-screen">
+      <div class="music-list">
+        <div
+          *ngFor="let music of victoryMusics"
+          class="music-item"
+          [class.selected]="selectedMusic === music.id"
+          (click)="onMusicSelect(music.id)"
+        >
+          {{ music.name }}
+        </div>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="ipod-button"
+      [class.playing]="isPlaying"
+      (click)="isPlaying ? stopPreview() : previewSelectedMusic()"
+    >
+      <div class="play-pause-icon"></div>
+    </button>
+    <img class="ipod" src="/assets/ipod.webp" />
+  </div>
+</div>

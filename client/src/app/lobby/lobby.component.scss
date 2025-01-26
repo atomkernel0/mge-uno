@@ -1,0 +1,521 @@
+@import url("https://fonts.cdnfonts.com/css/tf2-build");
+
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-image: url("/assets/lobby.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+h1 {
+  font-family: "TF2 Build", sans-serif;
+  color: #140d0b;
+  font-size: 4rem;
+}
+
+.lobby-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.music-selection {
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+
+  h2 {
+    margin-bottom: 15px;
+  }
+}
+
+.music-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.music-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+
+  &.selected {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  label {
+    flex: 1;
+  }
+}
+
+.preview-btn,
+.stop-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+  font-size: 1.2em;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.stop-btn {
+  margin-top: 10px;
+}
+
+.lobby-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.player-profile-section {
+  margin-bottom: 30px;
+}
+
+.nickname-form {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+
+  input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 3px solid #41110a1a;
+    flex: 1;
+    background-color: #41110a1a;
+    font-weight: bold;
+    font-size: 15px;
+  }
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4d2e0e;
+    color: #1e0d04;
+    font-size: 16px;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+    font-weight: bold;
+
+    &:hover {
+      background-color: #4d2e0e;
+      box-shadow: 0 0 10px #0e0905;
+    }
+  }
+}
+
+.avatar-selection {
+  .avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .avatar-option {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &.selected {
+      border-color: #4caf50;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+// .players-list {
+//   margin-bottom: 30px;
+
+//   .player-item {
+//     display: flex;
+//     align-items: center;
+//     padding: 10px;
+//     background-color: #f5f5f5;
+//     margin-bottom: 5px;
+//     border-radius: 4px;
+
+//     .player-avatar {
+//       width: 40px;
+//       height: 40px;
+//       border-radius: 50%;
+//       margin-right: 10px;
+//     }
+
+//     .player-name {
+//       flex: 1;
+//     }
+//   }
+// }
+
+.music-selection {
+  margin-bottom: 30px;
+
+  .music-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .music-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+
+    &.selected {
+      background-color: #e0e0e0;
+    }
+
+    label {
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .preview-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2em;
+    }
+  }
+
+  .stop-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #d32f2f;
+    }
+  }
+}
+
+.control-buttons {
+  display: flex;
+  gap: 10px;
+
+  button {
+    padding: 12px 24px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+
+    &.start-btn {
+      background-color: #4caf50;
+      color: white;
+
+      &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+    }
+
+    &.leave-btn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+  }
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .player-status {
+    margin-left: auto;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ff4444;
+
+    &.ready {
+      color: #44ff44;
+    }
+  }
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: rgba(211, 47, 47, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 400px;
+  text-align: left;
+
+  .error-icon {
+    font-size: 1.1rem;
+    margin-top: 2px;
+  }
+}
+
+.start-button {
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.lobby-container {
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.ipod-container {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 1700px;
+  height: auto;
+  z-index: 10;
+  pointer-events: none;
+
+  @media (max-width: 800px) {
+    right: -60%;
+  }
+
+  .ipod {
+    width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none;
+  }
+
+  .music-screen {
+    position: absolute;
+    left: 57%;
+    bottom: 14.5%;
+    width: 208px;
+    height: 150px;
+    background: #f1f1f1;
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: auto;
+  }
+
+  .music-list {
+    height: 100%;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #2e2e2e;
+      border-radius: 3px;
+    }
+  }
+
+  .music-item {
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: bold;
+    color: #2e2e2e;
+    font-family: "Rubik", sans-serif;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+
+    &.selected {
+      background-color: #b1b1b1;
+      color: rgb(41, 41, 41);
+    }
+  }
+
+  .ipod-button {
+    position: absolute;
+    bottom: 47px;
+    right: 35.7%;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #f0f0f0, #e6e6e6);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    pointer-events: auto;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &:active {
+      box-shadow: inset 3px 3px 6px #d1d1d1, inset -3px -3px 6px #ffffff;
+    }
+
+    .play-pause-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      transition: all 0.2s ease;
+
+      // Play icon (triangle)
+      border-style: solid;
+      border-width: 10px 0 10px 16px;
+      border-color: transparent transparent transparent #616161;
+    }
+
+    &.playing .play-pause-icon {
+      // Pause icon (two bars)
+      width: 16px;
+      height: 16px;
+      border: none;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 5px;
+        height: 100%;
+        background-color: #616161;
+        border-radius: 2px;
+      }
+
+      &::before {
+        left: 0;
+      }
+
+      &::after {
+        right: 0;
+      }
+    }
+  }
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.player-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  border-radius: 12px;
+  min-width: 120px;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.player-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.player-name {
+  color: white;
+  font-size: 1rem;
+  text-align: center;
+  word-break: break-word;
+  max-width: 100px;
+
+  span {
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+}
+
+.player-status {
+  font-size: 1.2rem;
+  color: #ff4444;
+
+  &.ready {
+    color: #00c851;
+  }
+}

@@ -1,0 +1,574 @@
+// Animations
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes drawFromDeck {
+  0% {
+    transform: translateY(0) rotate(0) translateZ(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(100px) translateX(50px) rotate(-5deg) translateZ(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(200px) translateX(100px) rotate(-10deg) translateZ(0);
+    opacity: 0;
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(100px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-image: url("/assets/background.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.overlay-image {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  pointer-events: none; /* Pour que l'image n'interfère pas avec les interactions */
+}
+
+// Container principal
+.game-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .current-card {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+
+    app-card {
+      transform: scale(1.2);
+      pointer-events: none;
+    }
+  }
+
+  .color-to-play,
+  .current-player {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .color-to-play span {
+    font-size: 24px;
+  }
+
+  .game-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4d2e0e;
+      color: #1e0d04;
+      font-size: 16px;
+      cursor: pointer;
+      transition: box-shadow 0.3s;
+      box-shadow: 0 0 10px #0e0905;
+      font-weight: bold;
+
+      &:hover {
+        background-color: #4d2e0e;
+        box-shadow: 0 0 20px #0e0905;
+      }
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .message {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #666;
+  }
+}
+
+// Zone du deck
+.deck-area {
+  position: relative;
+  z-index: 300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  margin: 20px 0;
+
+  .deck {
+    min-width: 168px;
+    height: 240px;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+
+    &.highlight {
+      animation: highlight 1s infinite ease-in-out;
+    }
+
+    &:hover:not(.disabled) {
+      transform: scale(1.1);
+
+      &::after {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      filter: grayscale(30%);
+    }
+
+    &.can-draw {
+      &::before {
+        content: "";
+        position: absolute;
+        inset: -3px;
+        border-radius: 12px;
+        z-index: -1;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+
+      &::after {
+        content: "Piocher";
+        position: absolute;
+        bottom: -30px;
+        left: 30%;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 14px;
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+    }
+
+    .card-back {
+      width: 100%;
+      height: 100%;
+      background-image: url("/assets/back.webp");
+      background-size: cover;
+      background-position: center;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+  }
+}
+
+// Main du joueur
+.player-hand {
+  position: fixed;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1400px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 20px;
+  perspective: 2000px;
+
+  app-card {
+    position: absolute;
+    transform-origin: center 200%;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    margin: 0 -25px;
+    will-change: transform;
+
+    // Base rotation calculation
+    @for $i from 1 through 20 {
+      &:nth-child(#{$i}) {
+        --angle: #{-30 + ($i - 1) * 3}deg;
+        transform: rotate(var(--angle));
+      }
+    }
+
+    // Hover effect
+    &:hover {
+      transform: rotate(var(--angle)) translateY(-30px) scale(1.1);
+      z-index: 10;
+
+      // Spread cards to the left
+      & ~ app-card {
+        transform: rotate(calc(var(--angle) + 10deg));
+      }
+    }
+
+    // Selected card style
+    &.selected {
+      transform: rotate(var(--angle)) translateY(-50px) scale(1.1);
+      z-index: 20;
+
+      // Spread cards when selected
+      & ~ app-card {
+        transform: rotate(calc(var(--angle) + 10deg));
+      }
+    }
+
+    // When any card is hovered, adjust previous cards
+    &:has(~ app-card:hover),
+    &:has(~ app-card.selected) {
+      transform: rotate(calc(var(--angle) - 10deg));
+    }
+  }
+}
+
+// Container de la carte piochée
+.drawn-card-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+
+  .drawn-card {
+    position: absolute;
+    width: 120px;
+    height: 180px;
+    background-image: url("/assets/back.webp");
+    background-size: cover;
+    border-radius: 10px;
+    animation: drawFromDeck 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+}
+
+//
+.opponents-area {
+  z-index: 300;
+}
+
+.opponents-area {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.opponent-hand {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+
+  // Positions des joueurs avec plus d'espace
+  &.opponent-top {
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.opponent-top-left {
+    top: 80px;
+    left: 8%;
+    transform: rotate(-45deg);
+  }
+
+  &.opponent-top-right {
+    top: 80px;
+    right: 8%;
+    transform: rotate(45deg);
+  }
+
+  // Avatar styling
+  .opponent-avatar {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 2;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .opponent-cards {
+    position: relative;
+    transform: translateY(55px);
+    width: 200px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .card-back {
+      position: absolute;
+      width: 90px;
+      height: 120px;
+      background: url("/assets/back.webp") no-repeat center/cover;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+      transform-origin: center center;
+      will-change: transform;
+    }
+  }
+
+  .opponent-info {
+    position: relative;
+    text-align: center;
+    font-size: 14px;
+    color: black;
+    font-weight: bold;
+    z-index: 2;
+    transform: translateY(5px);
+  }
+
+  &.current-turn {
+    .opponent-avatar {
+      box-shadow: 0 0 10px #fff;
+    }
+
+    .opponent-info {
+      text-shadow: 0 0 10px #fff;
+    }
+  }
+
+  &.opponent-left {
+    .opponent-cards {
+      top: 55%;
+      transform: translateX(75%) translateY(-50%);
+    }
+
+    .opponent-avatar {
+      margin-left: 70px;
+    }
+
+    .opponent-info {
+      margin-left: 68px;
+    }
+  }
+
+  &.opponent-right {
+    .opponent-cards {
+      top: 55%;
+      transform: translateX(-20%) translateY(-50%);
+    }
+
+    .opponent-avatar {
+      margin-right: -150px;
+    }
+
+    .opponent-info {
+      margin-right: -155px;
+    }
+  }
+}
+
+.current-card {
+  app-card {
+    border-radius: 11px;
+    transition: box-shadow 0.3s ease;
+  }
+}
+
+@keyframes highlight {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px #fff;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #fff;
+  }
+}
+
+@keyframes crazyShuffle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 0 0 10px #fff;
+  }
+  25% {
+    transform: scale(1.2) rotate(45deg);
+    box-shadow: 0 0 20px #fff;
+  }
+  50% {
+    transform: scale(1.5) rotate(-45deg);
+    box-shadow: 0 0 30px #fff;
+  }
+  75% {
+    transform: scale(1.2) rotate(45deg);
+    box-shadow: 0 0 20px #fff;
+  }
+}
+
+.shuffle-animation {
+  animation: crazyShuffle 2s ease-in-out forwards;
+}
+
+.direction-indicator {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  .arrow {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+
+    &.clockwise {
+      animation: rotate-clockwise 10s linear infinite;
+    }
+
+    &.counter-clockwise {
+      animation: rotate-counter-clockwise 10s linear infinite;
+    }
+  }
+}
+
+@keyframes rotate-clockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-counter-clockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+// Bannière spectateur
+.spectator-banner {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 0 0 8px 8px;
+  z-index: 1000;
+  font-weight: bold;
+  animation: slideInFromTop 0.3s ease-out;
+}
+
+// Mode spectateur pour les éléments interactifs
+.spectator-mode {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+// Animation pour la bannière
+@keyframes slideInFromTop {
+  from {
+    transform: translate(-50%, -100%);
+  }
+  to {
+    transform: translate(-50%, 0);
+  }
+}
+
+// Modifier la section .player-hand pour le mode spectateur
+.player-hand {
+  &.spectator-mode {
+    opacity: 0.7;
+    app-card {
+      pointer-events: none;
+      &:hover {
+        transform: none;
+      }
+    }
+  }
+}
+
+// Modifier la section .deck-area pour le mode spectateur
+.deck-area {
+  .deck {
+    &.spectator-mode {
+      cursor: default;
+      &:hover {
+        transform: none;
+      }
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+// Style pour les noms des joueurs en mode spectateur
+.opponent-info {
+  &.spectator {
+    font-style: italic;
+    &::after {
+      content: " (Spectateur)";
+      font-size: 0.8em;
+      opacity: 0.8;
+    }
+  }
+}

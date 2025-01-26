@@ -1,0 +1,7 @@
+<div class="card" (click)="onCardClick()" [class.selected]="selected">
+  <img [src]="getCardImage()" alt="Card" *ngIf="getCardImage()" />
+  <div class="card-content" *ngIf="!getCardImage()">
+    <span class="card-value">{{ card.value }}</span>
+    <span class="card-color">{{ card.color }}</span>
+  </div>
+</div>
