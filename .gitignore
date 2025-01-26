@@ -1,0 +1,7 @@
+/client/node_modules/
+/client/public/
+
+/server/node_modules/
+/server/public/
+
+*/.env
